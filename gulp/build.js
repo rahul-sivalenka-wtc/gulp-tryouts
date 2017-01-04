@@ -8,12 +8,20 @@ var conf = {
         output: 'output'
     },
     names: {
-        outputApp: 'app.js'
+        buildOutput: {
+            js: 'app.js',
+            css: 'app.css'
+        }
     }
 };
 
 gulp.task('deploy', function() {
-    return gulp.src(path.join(conf.paths.build, 'app-*.js')) //, { base: conf.paths.build })
-            .pipe($.rename(conf.names.outputApp))
+    var pattern = '*';//'app-*.js';
+    var jsPattern = '*.js';
+    var cssPattern = '*.css';
+    
+    return gulp.src(path.join(conf.paths.build, pattern))
+            .pipe($.if(jsPattern, $.rename(conf.names.buildOutput.js)))
+            .pipe($.if(cssPattern, $.rename(conf.names.buildOutput.css)))
             .pipe(gulp.dest(conf.paths.output));
 });
